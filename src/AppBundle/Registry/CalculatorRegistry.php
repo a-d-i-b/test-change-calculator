@@ -3,6 +3,7 @@
 namespace AppBundle\Registry;
 
 use AppBundle\Calculator\Mk1Calculator;
+use AppBundle\Calculator\Mk2Calculator;
 use AppBundle\Calculator\CalculatorInterface;
 use AppBundle\Registry\CalculatorRegistryInterface;
 
