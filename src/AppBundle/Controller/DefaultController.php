@@ -12,41 +12,35 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends Controller
 {
-    private $registry;
-    
-    public function __construct()
-    {
-        $this->registry = new CalculatorRegistry;
-    }
-
     /**
      * @Route("/automaton/{mk}/change/{amount}")
      */
     public function automatonMk(string $mk, int $amount)
     {
-        $response = null;
+        $response = new Response();
 
-        $calculator = $this->registry->getCalculatorFor($mk);
+        $calculator = $this->get('calculator')->getCalculatorFor($mk);
 
-        if ($calculator == null)
+        if ($calculator != null)
         {
-            $response = new Response(
-                json_encode(null),
-                Response::HTTP_OK,
-                array('Content-Type', 'application/json')
-            );
+            $change = $calculator->getChange($amount);
+            
+            if ($change != null)
+            {
+                $response->setContent(json_encode($change));
+                $response->setStatusCode(Response::HTTP_OK);
+                $response->headers->set('Content-Type', 'application/json');
+            }
+            else
+            {
+                $response->setStatusCode(Response::HTTP_NO_CONTENT);
+            }
         }
         else
         {
-            $change = $this->registry->getCalculatorFor($mk)->getChange($amount);
-
-            $response = new Response(
-                json_encode($change),
-                Response::HTTP_OK,
-                array('Content-Type', 'application/json')
-            );
+            $response->setStatusCode(Response::HTTP_NOT_FOUND);
         }
 
-        $response->send();
+        return $response;
     }
 }

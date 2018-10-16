@@ -19,11 +19,9 @@ class CalculatorRegistry implements CalculatorRegistryInterface
         switch($model)
         {
             case 'mk1':
-                return new Mk1Calculator;
-                break;
+                return new Mk1Calculator();
             case 'mk2':
-                return new Mk2Calculator;
-                break;
+                return new Mk2Calculator();
         }
         return null;
     }
